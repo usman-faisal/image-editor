@@ -52,13 +52,13 @@ export function EditImageDialog({
         </DialogHeader>
         {defaultTab === 'konva' && (
           <KonvaEditor
-            imageUrl={imageSrc}
+            imageSrc={imageSrc}
             maxWidth={1000}
             stageRef={konvaEditorRef}
           />
         )}
         {defaultTab === 'gemini' && (
-          <GeminiEditor imageUrl={imageSrc} />
+          <GeminiEditor imageSrc={imageSrc} />
         )}
 
         <DialogFooter>

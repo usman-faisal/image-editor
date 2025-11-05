@@ -1,29 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
 import useImage from 'use-image';
 import { Spinner } from '../ui/spinner';
-import { EditorToolbar } from './EditorToolbar';
-import { EditorStyleControls } from './EditorStyleControls';
-import { TextStyleControls } from './TextStyleControls';
-import { RotationControl } from './RotationControl';
-import { ExportButtons } from './ExportButtons';
-import { EditorCanvas } from './EditorCanvas';
+import { EditorToolbar } from './editor-toolbar';
+import { EditorStyleControls } from './editor-style-controls';
+import { TextStyleControls } from './text-style-controls';
+import { RotationControl } from './rotation-control';
+import { ExportButtons } from './export-buttons';
+import { EditorCanvas } from './editor-canvas';
 import { Tool, ShapeConfig } from './types';
 import { Stage } from 'konva/lib/Stage';
 
 export interface KonvaEditorProps {
-    imageUrl: string;
+    imageSrc: string;
     maxWidth?: number;
     maxHeight?: number;
     stageRef: React.RefObject<Stage | null>;
 }
 
 export const KonvaEditor = ({
-    imageUrl,
+    imageSrc,
     maxWidth = 800,
     maxHeight = 600,
     stageRef,
 }: KonvaEditorProps) => {
-    const [image, status] = useImage(imageUrl, 'anonymous');
+    const [image, status] = useImage(imageSrc);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [tool, setTool] = useState<Tool>('select');
     const [shapes, setShapes] = useState<ShapeConfig[]>([]);

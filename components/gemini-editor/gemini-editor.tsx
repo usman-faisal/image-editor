@@ -1,32 +1,28 @@
-import { imageUrlToBase64 } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { editImage } from "@/app/actions";
 
 interface GeminiEditorProps {
-    imageUrl: string;
+    imageSrc: string;
 }
 
 export function GeminiEditor({
-    imageUrl
+    imageSrc
 }: GeminiEditorProps) {
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
+    const [editedImage, setEditedImage] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
-
-    useEffect(() => {
-        imageUrlToBase64(imageUrl)
-            .then(setImageSrc)
-            .catch((err) => console.error("Error converting image:", err));
-    }, [imageUrl]);
 
     const handleGenerateVariation = async () => {
         if (!prompt.trim() || !imageSrc) return;
 
         setIsGenerating(true);
         try {
-            // TODO: Implement variation generation
+            const newImage = await editImage(imageSrc, prompt)
+            console.log(newImage)
+            setEditedImage(newImage)
             console.log("Generating variation with prompt:", prompt);
         } catch (error) {
             console.error("Error generating variation:", error);
@@ -36,18 +32,36 @@ export function GeminiEditor({
     };
 
     return (
-        <div className="space-y-4">
-            <div className="flex flex-col gap-4">
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {imageSrc && (
-                    <div className="relative w-full max-w-md mx-auto">
-                        <img 
-                            src={imageSrc} 
-                            alt="Original" 
-                            className="w-full h-auto rounded-lg border"
-                        />
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Original Image</Label>
+                        <div className="relative w-full">
+                            <img 
+                                src={imageSrc} 
+                                alt="Original" 
+                                className="w-full h-auto rounded-lg border"
+                            />
+                        </div>
                     </div>
                 )}
                 
+                {editedImage && (
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Generated Variation</Label>
+                        <div className="relative w-full">
+                            <img 
+                                src={editedImage} 
+                                alt="Generated variation" 
+                                className="w-full h-auto rounded-lg border"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="flex flex-col gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="prompt">Prompt for Variation</Label>
                     <Input

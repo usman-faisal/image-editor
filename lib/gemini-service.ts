@@ -1,8 +1,7 @@
 import { GoogleGenAI } from "@google/genai"
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
-
-export async function editImage(base64Image: string, editText: string): Promise<string> {
+export async function generateImageEdit(base64Image: string, editText: string): Promise<string> {
     const ai = new GoogleGenAI({
         apiKey: GEMINI_API_KEY!,
     })
@@ -33,7 +32,7 @@ export async function editImage(base64Image: string, editText: string): Promise<
             savedImageBase64 = imageData;
         }
     }
-
+    console.log(parts)
     if (!savedImageBase64) {
         throw new Error("No image returned from Gemini API");
     }

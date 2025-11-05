@@ -56,14 +56,8 @@ export function ImageGenerator() {
       setLoadingIndices(new Set())
     } catch (error) {
       console.error("Error generating images:", error)
-      toast.error("Failed to generate images. Using placeholder image instead.")
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      const newImageUrl = `https://picsum.photos/seed/${prompt}-${images.length}/200`
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages]
-        updatedImages[0] = newImageUrl
-        return updatedImages
-      })
+      toast.error("Failed to generate images.")
+      setImages(() => images.slice(0, images.length - 1))
       setLoadingIndices(new Set())
     } finally {
       setPrompt("")
