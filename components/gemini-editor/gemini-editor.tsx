@@ -24,9 +24,7 @@ export function GeminiEditor({
         setIsGenerating(true);
         try {
             const newImage = await editImage(imageSrc, prompt)
-            console.log(newImage)
             setEditedImage(newImage)
-            console.log("Generating variation with prompt:", prompt);
         } catch (error) {
             console.error("Error generating variation:", error);
         } finally {

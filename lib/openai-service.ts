@@ -22,7 +22,6 @@ export const generateImage = async (prompt: string): Promise<string[]> => {
     }
 
     const responseData = await response.json()
-    console.log(responseData)
     return responseData.data.map(
         (i: { b64_json: string }) => {
             return `data:image/png;base64,${i.b64_json}`;

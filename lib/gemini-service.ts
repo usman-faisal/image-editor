@@ -27,13 +27,11 @@ export async function generateImageEdit(base64Image: string, editText: string): 
     let savedImageBase64: string | undefined;
     for (const part of parts) {
         if (part.text) {
-            console.log(part.text);
         } else if (part.inlineData) {
             const imageData = part.inlineData.data;
             savedImageBase64 = imageData;
         }
     }
-    console.log(parts)
     if (!savedImageBase64) {
         throw new Error("No image returned from Gemini API");
     }
