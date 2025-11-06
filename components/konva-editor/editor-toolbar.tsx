@@ -10,44 +10,24 @@ import {
     Move
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tool } from './types';
+import { useKonvaEditor } from '@/lib/konva-editor/konva-editor-provider';
 
-interface EditorToolbarProps {
-    tool: Tool;
-    setTool: (tool: Tool) => void;
-    addShape: (type: Tool) => void;
-    undo: () => void;
-    redo: () => void;
-    deleteSelected: () => void;
-    canUndo: boolean;
-    canRedo: boolean;
-    hasSelection: boolean;
-}
 
 export const EditorToolbar = ({
-    tool,
-    setTool,
-    addShape,
-    undo,
-    redo,
-    deleteSelected,
-    canUndo,
-    canRedo,
-    hasSelection,
-}: EditorToolbarProps) => {
+}) => {
+    const {state, dispatch} = useKonvaEditor()
+
     return (
         <div className="flex items-center gap-2 flex-wrap border-b pb-4">
             <span className="text-sm font-semibold text-gray-700 mr-2">Tools:</span>
             <Button
-                onClick={() => setTool('select')}
-                variant={tool === 'select' ? 'default' : 'secondary'}
                 size="icon"
                 title="Select"
             >
                 <Move size={20} />
             </Button>
             <Button
-                onClick={() => addShape('text')}
+                onClick={() => dispatch({ type: 'ADD_SHAPE', payload: { type: 'text' } })}
                 variant="secondary"
                 size="icon"
                 title="Add Text"
@@ -55,7 +35,7 @@ export const EditorToolbar = ({
                 <Type size={20} />
             </Button>
             <Button
-                onClick={() => addShape('rectangle')}
+                onClick={() => dispatch({ type: 'ADD_SHAPE', payload: { type: 'rectangle' } })}
                 variant="secondary"
                 size="icon"
                 title="Add Rectangle"
@@ -63,7 +43,7 @@ export const EditorToolbar = ({
                 <Square size={20} />
             </Button>
             <Button
-                onClick={() => addShape('circle')}
+                onClick={() => dispatch({ type: 'ADD_SHAPE', payload: { type: 'circle' } })}
                 variant="secondary"
                 size="icon"
                 title="Add Circle"
@@ -71,7 +51,7 @@ export const EditorToolbar = ({
                 <CircleIcon size={20} />
             </Button>
             <Button
-                onClick={() => addShape('line')}
+                onClick={() => dispatch({ type: 'ADD_SHAPE', payload: { type: 'line' } })}
                 variant="secondary"
                 size="icon"
                 title="Add Line"
@@ -79,7 +59,7 @@ export const EditorToolbar = ({
                 <Minus size={20} />
             </Button>
             <Button
-                onClick={() => addShape('arrow')}
+                onClick={() => dispatch({ type: 'ADD_SHAPE', payload: { type: 'arrow' } })}
                 variant="secondary"
                 size="icon"
                 title="Add Arrow"
@@ -90,8 +70,10 @@ export const EditorToolbar = ({
             <div className="w-px h-8 bg-gray-300 mx-2" />
             
             <Button
-                onClick={undo}
-                disabled={!canUndo}
+                onClick={() => dispatch({ type: 'UNDO' })}
+                disabled={
+                    state.historyStep === 0
+                }
                 variant="secondary"
                 size="icon"
                 title="Undo"
@@ -99,8 +81,8 @@ export const EditorToolbar = ({
                 <Undo2 size={20} />
             </Button>
             <Button
-                onClick={redo}
-                disabled={!canRedo}
+                onClick={() => dispatch({ type: 'REDO' })}
+                disabled={state.historyStep >= state.history.length - 1}
                 variant="secondary"
                 size="icon"
                 title="Redo"
@@ -111,8 +93,8 @@ export const EditorToolbar = ({
             <div className="w-px h-8 bg-gray-300 mx-2" />
             
             <Button
-                onClick={deleteSelected}
-                disabled={!hasSelection}
+                onClick={() => dispatch({ type: 'DELETE_SELECTED' })}
+                disabled={!state.selectedId}
                 variant="destructive"
                 size="icon"
                 title="Delete Selected"

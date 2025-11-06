@@ -1,4 +1,4 @@
-import { ShapeConfig, Tool } from './types';
+import { ShapeConfig } from './types';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
@@ -9,27 +9,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { useKonvaEditor } from '@/lib/konva-editor/konva-editor-provider';
+import { useState } from 'react';
 
-interface TextStyleControlsProps {
-    fontSize: number;
-    setFontSize: (size: number) => void;
-    fontFamily: string;
-    setFontFamily: (family: string) => void;
-    selectedShape: ShapeConfig | undefined;
-    tool: Tool;
-    updateShape: (id: string, updates: Partial<ShapeConfig>) => void;
-}
 
-export const TextStyleControls = ({
-    fontSize,
-    setFontSize,
-    fontFamily,
-    setFontFamily,
-    selectedShape,
-    tool,
-    updateShape,
-}: TextStyleControlsProps) => {
-    if (selectedShape?.type !== 'text' && tool !== 'text') {
+export const TextStyleControls = () => {
+    const { state, dispatch } = useKonvaEditor();
+    const selectedShape = state.shapes.find(s => s.id === state.selectedId);
+    const [fontSize, setFontSize] = useState(selectedShape?.fontSize || 24);
+    const [fontFamily, setFontFamily] = useState(selectedShape?.fontFamily || 'Arial');
+    
+    const updateShape = (id: string, updates: Partial<ShapeConfig>) => {
+        dispatch({ type: 'UPDATE_SHAPE', payload: { id, updates } });
+    }
+    if (selectedShape?.type !== 'text') {
         return null;
     }
 

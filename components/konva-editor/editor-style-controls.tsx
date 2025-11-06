@@ -2,33 +2,36 @@ import { ShapeConfig } from './types';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
+import { useKonvaEditor } from '@/lib/konva-editor/konva-editor-provider';
+import { useState } from 'react';
 
-interface EditorStyleControlsProps {
-    fillColor: string;
-    setFillColor: (color: string) => void;
-    strokeColor: string;
-    setStrokeColor: (color: string) => void;
-    strokeWidth: number;
-    setStrokeWidth: (width: number) => void;
-    opacity: number;
-    setOpacity: (opacity: number) => void;
-    selectedShape: ShapeConfig | undefined;
-    updateShape: (id: string, updates: Partial<ShapeConfig>) => void;
-}
 
 export const EditorStyleControls = ({
-    fillColor,
-    setFillColor,
-    strokeColor,
-    setStrokeColor,
-    strokeWidth,
-    setStrokeWidth,
-    opacity,
-    setOpacity,
-    selectedShape,
-    updateShape,
-}: EditorStyleControlsProps) => {
+}) => {
+    const { state, dispatch } = useKonvaEditor();
+    const selectedShape = state.shapes.find(s => s.id === state.selectedId);
+    const fillColor = selectedShape?.fill;
+    const strokeColor = selectedShape?.stroke;
+    const strokeWidth = selectedShape?.strokeWidth ?? 0;
+    const opacity = selectedShape?.opacity ?? 1;
+    const handleStyleChange = (
+        styleType: keyof typeof state.styles,
+        value: string | number
+    ) => {
+        dispatch({ type: 'UPDATE_STYLE', payload: { styleType, value } });
+
+        if (selectedShape) {
+            dispatch({
+                type: 'UPDATE_SHAPE',
+                payload: { id: selectedShape.id, updates: { [styleType]: value } },
+            });
+        }
+    };
     if (!selectedShape) {
+        return null;
+    }
+
+    if (!state.selectedId) {
         return null;
     }
     return (
@@ -40,21 +43,15 @@ export const EditorStyleControls = ({
                         type="color"
                         value={fillColor}
                         onChange={(e) => {
-                            setFillColor(e.target.value);
-                            if (selectedShape) {
-                                updateShape(selectedShape.id, { fill: e.target.value });
-                            }
+                            handleStyleChange('fillColor', e.target.value);
                         }}
                         className="w-12 h-10 rounded cursor-pointer border"
                     />
                     <Input
                         type="text"
-                        value={fillColor}
+                        value={strokeColor}
                         onChange={(e) => {
-                            setFillColor(e.target.value);
-                            if (selectedShape) {
-                                updateShape(selectedShape.id, { fill: e.target.value });
-                            }
+                            handleStyleChange('fillColor', e.target.value);
                         }}
                         className="flex-1"
                     />
@@ -66,12 +63,9 @@ export const EditorStyleControls = ({
                 <div className="flex gap-2">
                     <input
                         type="color"
-                        value={strokeColor}
+                        value={strokeWidth}
                         onChange={(e) => {
-                            setStrokeColor(e.target.value);
-                            if (selectedShape) {
-                                updateShape(selectedShape.id, { stroke: e.target.value });
-                            }
+                            handleStyleChange('strokeWidth', Number(e.target.value));
                         }}
                         className="w-12 h-10 rounded cursor-pointer border"
                     />
@@ -79,10 +73,7 @@ export const EditorStyleControls = ({
                         type="text"
                         value={strokeColor}
                         onChange={(e) => {
-                            setStrokeColor(e.target.value);
-                            if (selectedShape) {
-                                updateShape(selectedShape.id, { stroke: e.target.value });
-                            }
+                            handleStyleChange('strokeColor', e.target.value);
                         }}
                         className="flex-1"
                     />
@@ -99,10 +90,7 @@ export const EditorStyleControls = ({
                     step={1}
                     value={[strokeWidth]}
                     onValueChange={([value]) => {
-                        setStrokeWidth(value);
-                        if (selectedShape) {
-                            updateShape(selectedShape.id, { strokeWidth: value });
-                        }
+                        handleStyleChange('strokeWidth', value);
                     }}
                 />
             </div>
@@ -117,10 +105,7 @@ export const EditorStyleControls = ({
                     step={0.1}
                     value={[opacity]}
                     onValueChange={([value]) => {
-                        setOpacity(value);
-                        if (selectedShape) {
-                            updateShape(selectedShape.id, { opacity: value });
-                        }
+                        handleStyleChange('opacity', value);
                     }}
                 />
             </div>

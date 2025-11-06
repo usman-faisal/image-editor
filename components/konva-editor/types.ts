@@ -1,4 +1,3 @@
-export type Tool = 'select' | 'text' | 'rectangle' | 'circle' | 'line' | 'arrow';
 export interface ShapeConfig {
     id: string;
     type: 'text' | 'rectangle' | 'circle' | 'line' | 'arrow';

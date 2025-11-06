@@ -1,16 +1,15 @@
+import { useKonvaEditor } from '@/lib/konva-editor/konva-editor-provider';
 import { Label } from '../ui/label';
 import { Slider } from '../ui/slider';
 import { ShapeConfig } from './types';
 
-interface RotationControlProps {
-    selectedShape: ShapeConfig | undefined;
-    updateShape: (id: string, updates: Partial<ShapeConfig>) => void;
-}
 
 export const RotationControl = ({
-    selectedShape,
-    updateShape,
-}: RotationControlProps) => {
+}) => {
+    const { state, dispatch } = useKonvaEditor();
+    const selectedShape = state.shapes.find(s => s.id === state.selectedId);
+
+
     if (!selectedShape) {
         return null;
     }
@@ -26,7 +25,15 @@ export const RotationControl = ({
                     max={360}
                     value={[selectedShape.rotation || 0]}
                     onValueChange={(value) => {
-                        updateShape(selectedShape.id, { rotation: value[0] });
+                        if (selectedShape) {
+                            dispatch({
+                                type: 'UPDATE_SHAPE',
+                                payload: {
+                                    id: selectedShape.id,
+                                    updates: { rotation: value[0] },
+                                },
+                            });
+                        }
                     }}
                     className="w-full"
                 />

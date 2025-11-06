@@ -5,13 +5,14 @@ export async function generateImageEdit(base64Image: string, editText: string): 
     const ai = new GoogleGenAI({
         apiKey: GEMINI_API_KEY!,
     })
+    const cleanedBase64 = base64Image.replace(/^data:image\/\w+;base64,/, "");
     const prompt = [
         { text: editText },
         {
             
             inlineData: {
                 mimeType: "image/png",
-                data: base64Image
+                data: cleanedBase64
             },
         },
     ];
@@ -36,5 +37,5 @@ export async function generateImageEdit(base64Image: string, editText: string): 
     if (!savedImageBase64) {
         throw new Error("No image returned from Gemini API");
     }
-    return savedImageBase64;
+    return `data:image/png;base64,${savedImageBase64}`;
 }

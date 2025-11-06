@@ -13,6 +13,8 @@ import { KonvaEditor } from "./konva-editor/konva-editor"
 import { GeminiEditor } from "./gemini-editor/gemini-editor"
 import { Stage } from "konva/lib/Stage"
 import { toast } from "sonner"
+import { KonvaEditorProvider } from "@/lib/konva-editor/konva-editor-provider"
+import { editorInitialState } from "@/lib/konva-editor/konva-editor-reducer"
 
 interface EditImageDialogProps {
   isOpen: boolean
@@ -51,11 +53,13 @@ export function EditImageDialog({
           <DialogTitle>Edit Image</DialogTitle>
         </DialogHeader>
         {defaultTab === 'konva' && (
-          <KonvaEditor
-            imageSrc={imageSrc}
-            maxWidth={1000}
-            stageRef={konvaEditorRef}
-          />
+          <KonvaEditorProvider>
+            <KonvaEditor
+              imageSrc={imageSrc}
+              maxWidth={1000}
+              stageRef={konvaEditorRef}
+            />
+          </KonvaEditorProvider>
         )}
         {defaultTab === 'gemini' && (
           <GeminiEditor imageSrc={imageSrc} />

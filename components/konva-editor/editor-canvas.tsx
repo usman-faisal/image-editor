@@ -1,14 +1,8 @@
 import { Stage, Layer, Image, Line, Text, Rect, Circle, Arrow } from 'react-konva';
 import { ShapeConfig } from './types';
+import { useRef, useState } from 'react';
+import { useKonvaEditor } from '@/lib/konva-editor/konva-editor-provider';
 
-interface EditorCanvasProps {
-    stageRef: React.RefObject<any>;
-    dimensions: { width: number; height: number };
-    image: HTMLImageElement | undefined;
-    shapes: ShapeConfig[];
-    setSelectedId: (id: string | null) => void;
-    updateShape: (id: string, updates: Partial<ShapeConfig>) => void;
-}
 function eventHandlers(shape: ShapeConfig, setSelectedId: (id: string | null) => void, updateShape: (id: string, updates: Partial<ShapeConfig>) => void) {
     return {
         onClick: () => setSelectedId(shape.id),
@@ -23,30 +17,33 @@ function eventHandlers(shape: ShapeConfig, setSelectedId: (id: string | null) =>
     }
 }
 export const EditorCanvas = ({
-    stageRef,
-    dimensions,
-    image,
-    shapes,
-    setSelectedId,
-    updateShape,
-}: EditorCanvasProps) => {
+}) => {
+    const { state, dispatch } = useKonvaEditor();
+    const shapes = state.shapes;
+    const dimensions = state.dimensions;
+    const updateShape = (id: string, updates: Partial<ShapeConfig>) => {
+        dispatch({ type: 'UPDATE_SHAPE', payload: { id, updates } });
+    }
+    const setSelectedId = (id: string | null) => {
+        dispatch({ type: 'SELECT_SHAPE', payload: { id } });
+    }
     return (
         <div className="relative rounded-lg overflow-hidden shadow-lg flex items-center justify-center bg-white p-4">
             <Stage 
-                ref={stageRef}
+                ref={state.stageRef}
                 width={dimensions.width} 
                 height={dimensions.height}
                 className="bg-gray-50"
-                onMouseDown={(e) => {
-                    const clickedOnEmpty = e.target === e.target.getStage();
-                    if (clickedOnEmpty) {
-                        setSelectedId(null);
-                    }
-                }}
+                // onMouseDown={(e) => {
+                //     const clickedOnEmpty = e.target === e.target.getStage();
+                //     if (clickedOnEmpty) {
+                //         setSelectedId(null);
+                //     }
+                // }}
             >
                 <Layer>
                     <Image 
-                        image={image} 
+                        image={state.image ?? undefined} 
                         x={0} 
                         y={0} 
                         height={dimensions.height}
