@@ -7,8 +7,9 @@ export type EditorState = {
     historyStep: number;
     shapes: ShapeConfig[];
     styles: {
-        fillColor: string;
-        strokeColor: string;
+        size: number;
+        fill: string;
+        stroke: string;
         strokeWidth: number;
         opacity: number;
         fontSize: number;
@@ -28,8 +29,9 @@ export const editorInitialState: EditorState = {
     historyStep: 0,
     shapes: [],
     styles: {
-        fillColor: "#ffffff",
-        strokeColor: "#000000",
+        size: 24,
+        fill: "#ffffff",
+        stroke: "#000000",
         strokeWidth: 2,
         opacity: 1,
         fontSize: 24,

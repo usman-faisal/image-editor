@@ -14,7 +14,6 @@ import { GeminiEditor } from "./gemini-editor/gemini-editor"
 import { Stage } from "konva/lib/Stage"
 import { toast } from "sonner"
 import { KonvaEditorProvider } from "@/lib/konva-editor/konva-editor-provider"
-import { editorInitialState } from "@/lib/konva-editor/konva-editor-reducer"
 
 interface EditImageDialogProps {
   isOpen: boolean
@@ -32,6 +31,7 @@ export function EditImageDialog({
   defaultTab
 }: EditImageDialogProps) {
   const konvaEditorRef = useRef<Stage | null>(null);
+  const [geminiEditedImage, setGeminiEditedImage] = useState<string | null>(null);
 
   if (!imageSrc) return null
 
@@ -43,6 +43,13 @@ export function EditImageDialog({
         return
       }
       toast.error("Failed to get edited image from Konva editor.")
+    }
+    if (defaultTab === 'gemini') {
+      if (geminiEditedImage) {
+        onSave(geminiEditedImage)
+        return
+      }
+      toast.error("No edited image from Gemini editor to save.")
     }
   }
 
@@ -62,7 +69,7 @@ export function EditImageDialog({
           </KonvaEditorProvider>
         )}
         {defaultTab === 'gemini' && (
-          <GeminiEditor imageSrc={imageSrc} />
+          <GeminiEditor imageSrc={imageSrc} editedImage={geminiEditedImage} setEditedImage={setGeminiEditedImage} />
         )}
 
         <DialogFooter>

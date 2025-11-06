@@ -6,12 +6,15 @@ import { editImage } from "@/app/actions";
 
 interface GeminiEditorProps {
     imageSrc: string;
+    editedImage: string | null;
+    setEditedImage: (image: string | null) => void;
 }
 
 export function GeminiEditor({
-    imageSrc
+    imageSrc,
+    editedImage,
+    setEditedImage
 }: GeminiEditorProps) {
-    const [editedImage, setEditedImage] = useState<string | null>(null);
     const [prompt, setPrompt] = useState("");
     const [isGenerating, setIsGenerating] = useState(false);
 
