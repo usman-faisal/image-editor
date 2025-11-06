@@ -6,15 +6,7 @@ export type EditorState = {
     history: ShapeConfig[][];
     historyStep: number;
     shapes: ShapeConfig[];
-    styles: {
-        size: number;
-        fill: string;
-        stroke: string;
-        strokeWidth: number;
-        opacity: number;
-        fontSize: number;
-        fontFamily: string;
-    }
+
     dimensions: {
         width: number;
         height: number;
@@ -28,15 +20,7 @@ export const editorInitialState: EditorState = {
     history: [[]],
     historyStep: 0,
     shapes: [],
-    styles: {
-        size: 24,
-        fill: "#ffffff",
-        stroke: "#000000",
-        strokeWidth: 2,
-        opacity: 1,
-        fontSize: 24,
-        fontFamily: "Arial"
-    },
+
     dimensions: {
         width: 0,
         height: 0
@@ -59,7 +43,7 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
                 y: state.dimensions.height / 2,
                 fill: '#ffffff',
                 stroke: '#111111',
-                strokeWidth: 0,
+                strokeWidth: 24,
                 opacity: 1,
                 rotation: 0,
             };
@@ -72,8 +56,8 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
                         ...baseConfig,
                         type: 'text',
                         text: 'Double click to edit',
-                        fontSize: state.styles.fontSize,
-                        fontFamily: state.styles.fontFamily,
+                        fontSize: 24,
+                        fontFamily: 'Arial',
                     };
                     break;
                 case 'rectangle':
@@ -185,16 +169,7 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
                 selectedId: id,
             }
         }
-        case 'UPDATE_STYLE': {
-            const { styleType, value } = action.payload;
-            return {
-                ...state,
-                styles: {
-                    ...state.styles,
-                    [styleType]: value,
-                }
-            }
-        }
+
         case 'SET_DIMENSIONS': {
             const { width, height } = action.payload;
             return {

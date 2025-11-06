@@ -31,13 +31,7 @@ type SelectShapeAction = {
     payload: { id: string | null };
 };
 
-type UpdateStyleAction = {
-    type: 'UPDATE_STYLE';
-    payload: {
-        styleType: keyof EditorState['styles'];
-        value: string | number;
-    };
-};
+
 
 type SetStageRefAction = {
     type: 'SET_STAGE_REF';
@@ -63,7 +57,6 @@ export type EditorAction =
     | UndoAction
     | RedoAction
     | SelectShapeAction
-    | UpdateStyleAction
     | SetDimensionsAction
     | DeleteSelectedAction
     | SetStageRefAction

@@ -11,7 +11,7 @@ export const EditorStyleControls = ({
     const { state, dispatch } = useKonvaEditor();
     const selectedShape = state.shapes.find(s => s.id === state.selectedId);
     const handleStyleChange = (
-        styleType: keyof typeof state.styles,
+        styleType: any,
         value: string | number
     ) => {
         if (selectedShape) {
