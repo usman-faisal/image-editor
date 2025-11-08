@@ -14,6 +14,7 @@ import { ImageGrid } from "./image-grid"
 import { createImages } from "@/app/actions"
 import { toast } from "sonner"
 import { EditImageDialog } from "./edit-image-dialog"
+import { NUMBER_OF_IMAGES } from "@/lib/constants"
 
 export function ImageGenerator() {
   const [prompt, setPrompt] = useState("")
@@ -31,7 +32,7 @@ export function ImageGenerator() {
     try {
       setIsLoading(true)
 
-      const placeholderCount = 1
+      const placeholderCount = NUMBER_OF_IMAGES
       const placeholders = Array(placeholderCount).fill("loading")
       const startIndex = 0
 
