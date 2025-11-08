@@ -46,6 +46,8 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
                 strokeWidth: 24,
                 opacity: 1,
                 rotation: 0,
+                scaleX: 1,
+                scaleY: 1,
             };
 
             let newShape: ShapeConfig;

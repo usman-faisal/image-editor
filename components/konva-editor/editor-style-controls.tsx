@@ -10,6 +10,7 @@ export const EditorStyleControls = ({
 }) => {
     const { state, dispatch } = useKonvaEditor();
     const selectedShape = state.shapes.find(s => s.id === state.selectedId);
+
     const handleStyleChange = (
         styleType: any,
         value: string | number
@@ -21,15 +22,21 @@ export const EditorStyleControls = ({
             });
         }
     };
+
     if (!selectedShape || !state.selectedId) {
         return null;
     }
+
     const fill = selectedShape.fill ?? '#000000';
     const stroke = selectedShape.stroke ?? '#000000';
     const strokeWidth = selectedShape.strokeWidth ?? 0;
     const opacity = selectedShape.opacity ?? 1;
+    
+    const scale = selectedShape.scaleX ?? 1;
+
     return (
         <div className="grid md:grid-cols-2 xs:grid-cols-1 gap-4">
+
             <div className="space-y-2">
                 <Label>Fill Color</Label>
                 <div className="flex gap-2">
@@ -103,6 +110,30 @@ export const EditorStyleControls = ({
                     }}
                 />
             </div>
+
+            <div className="space-y-2">
+                <Label>
+                    Size: {Math.round(scale * 100)}%
+                </Label>
+                <Slider
+                    min={0.1}
+                    max={3}
+                    step={0.1}
+                    value={[scale]}
+                    onValueChange={([value]) => {
+                        if (selectedShape) {
+                            dispatch({
+                                type: 'UPDATE_SHAPE',
+                                payload: {
+                                    id: selectedShape.id,
+                                    updates: { scaleX: value, scaleY: value }
+                                },
+                            });
+                        }
+                    }}
+                />
+            </div>
+
         </div>
     );
 };

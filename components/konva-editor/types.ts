@@ -15,4 +15,6 @@ export interface ShapeConfig {
     height?: number;
     radius?: number;
     points?: number[];
+    scaleX?: number;
+    scaleY?: number;
 }
